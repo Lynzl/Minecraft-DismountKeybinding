@@ -1,0 +1,109 @@
+buildscript {
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url 'https://files.minecraftforge.net/maven' }
+        maven { url 'https://dist.creeper.host/Sponge/maven' }
+    }
+
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+    }
+
+    ext {
+        mod = {}
+    }
+    apply from: 'modinfo.gradle'
+
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:all' << '-Xlint:-processing' << '-Werror'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
+version = mod.version
+group = mod.group
+archivesBaseName = "$mod.name-$mod.minecraftVersion"
+
+dependencies {
+    minecraft("net.minecraftforge:forge:$mod.minecraftVersion-$mod.forgeVersion")
+}
+
+minecraft {
+    mappings channel: 'snapshot', version: "$mod.mappingsVersion"
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
+            arg '-mixin.config=mixins.' + mod.id + '.json'
+
+            mods {
+                "$mod.id" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.disableRefMap', 'true'
+            arg '-mixin.config=mixins.' + mod.id + '.json'
+
+            mods {
+                "$mod.id" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', mod.id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                "$mod.id" {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, "mixins.${mod.id}.refmap.json"
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
+
+processResources {
+    expand project.properties
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Version": "1",
+                "Implementation-Title": mod.name,
+                "Implementation-Version": mod.version,
+                "Implementation-Vendor" : mod.authors,
+                "MixinConfigs": "mixins.${mod.id}.json"
+        ])
+    }
+}

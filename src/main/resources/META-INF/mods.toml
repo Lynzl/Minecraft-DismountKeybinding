@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="${mod.fmlVersionRange}"
+#issueTrackerURL="https://"
+license="${mod.license}"
+
+[[mods]]
+modId="${mod.id}"
+version="${mod.version}"
+displayName="${mod.name}"
+updateJSONURL="${mod.updateURL}"
+#displayURL="https://"
+#logoFile=""
+#credits=""
+authors="${mod.authors}"
+description="${mod.description}"
+
+[[dependencies.${mod.id}]]
+    modId="forge"
+    mandatory=true
+    versionRange="${mod.forgeVersionRange}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod.id}]]
+    modId="${mod.id}"
+    mandatory=true
+    versionRange="[${mod.version}]"
+    ordering="NONE"
+    side="BOTH"

@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "fr.lnzl.dkey.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.${mod.id}.refmap.json",
+  "mixins": [
+    "MixinPlayerEntity",
+    "MixinClientPlayNetHandler"
+  ],
+  "minVersion": "0.8"
+}
