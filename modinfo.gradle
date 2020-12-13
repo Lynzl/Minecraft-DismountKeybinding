@@ -1,7 +1,7 @@
 mod.id                = 'dkey'
 mod.group             = 'fr.lnzl.dkey'
 mod.name              = 'DismountKeybinding'
-mod.version           = '11.0.0-alpha'
+mod.version           = '11.0.0'
 mod.minecraftVersion  = '1.16.1'
 mod.forgeVersion      = '32.0.72'
 mod.forgeVersionRange = '[32.0.72,)'
